@@ -6,9 +6,11 @@ public class playerController : MonoBehaviour
 {   private BoxCollider2D boxCollider;
     private Vector3 moveDelta;
     private RaycastHit2D hit;
+    private Animator anim;
     public GameObject Player;
     private void Start()
     {   boxCollider = GetComponent<BoxCollider2D>();
+        anim = GetComponent<Animator>();
     }
     private void FixedUpdate()
     {   float x = Input.GetAxisRaw("Horizontal");
@@ -43,5 +45,41 @@ public class playerController : MonoBehaviour
         {   // Movement
             transform.Translate(moveDelta.x * Time.deltaTime, 0, 0);
         }
+
+        if (x == 0 && y == 0)
+        {
+            anim.SetBool("WalkUp", false);
+            anim.SetBool("WalkLeft", false);
+            anim.SetBool("WalkRight", false);
+            anim.SetBool("WalkDown", false);
+        }
+        if ( x < -0.01 )
+        {
+            // walk left
+            anim.SetBool("WalkLeft", true);
+            anim.SetBool("WalkRight", false);
+            anim.SetBool("WalkUp", false);
+            anim.SetBool("WalkDown", false);
+        } else if ( x > 0 )
+        {
+            anim.SetBool("WalkLeft", false);
+            anim.SetBool("WalkRight", true);
+            anim.SetBool("WalkUp", false);
+            anim.SetBool("WalkDown", false);
+        }
+        if (y < 0)
+        {
+            //Walk down
+            anim.SetBool("WalkDown", true);
+            anim.SetBool("WalkUp", false);
+            anim.SetBool("WalkLeft", false);
+            anim.SetBool("WalkRight", false);
+        } else if (y > 0)
+        {
+            anim.SetBool("WalkUp", true);
+            anim.SetBool("WalkDown", false);
+            anim.SetBool("WalkLeft", false);
+            anim.SetBool("WalkRight", false);
+        } 
     }
 }
