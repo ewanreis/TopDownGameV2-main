@@ -13,38 +13,32 @@ public class playerController : MonoBehaviour
         anim = GetComponent<Animator>();
     }
     private void FixedUpdate()
-    {   float x = Input.GetAxisRaw("Horizontal");
-        float y = Input.GetAxisRaw("Vertical");
-
+    {   float x = Input.GetAxisRaw("Horizontal"),y=0;
+        if (x != 0)
+            y = 0;
+        else if (x == 0)
+            y = Input.GetAxisRaw("Vertical");
         // Reset moveDelta
         moveDelta = new Vector3(x, y, 0);
-        //flip;
-        // Swap sprite direction
-        if(moveDelta.x > 0)
-        {
-            //Player.flip = false;
-        }else if (moveDelta.x < 0)
-        {
-            //Player.flip = true;
-        }
-        
+
+        //if (x < 0)
+            //Helper.FlipSprite(gameObject, true); // Flip Left
+        //else if (x > 0)
+            //Helper.FlipSprite(gameObject, false); // Flip Right
+            
         // Prevent Going inside colliders y
         hit = Physics2D.BoxCast(transform.position, boxCollider.size, 0, new Vector2(0, moveDelta.y)
             , Mathf.Abs(moveDelta.y * Time.deltaTime)
             , LayerMask.GetMask("Actor", "Blocking"));
-        if (hit.collider == null)
-        {   // Movement
-            transform.Translate(0, moveDelta.y * Time.deltaTime, 0);
-        }
-        
+        if (hit.collider == null)           
+            transform.Translate(0, moveDelta.y * Time.deltaTime, 0); // Movement
+
         // Prevent Going inside colliders x
         hit = Physics2D.BoxCast(transform.position, boxCollider.size, 0, new Vector2(0, moveDelta.x)
             , Mathf.Abs(moveDelta.x * Time.deltaTime)
             , LayerMask.GetMask("Actor", "Blocking"));
-        if (hit.collider == null)
-        {   // Movement
-            transform.Translate(moveDelta.x * Time.deltaTime, 0, 0);
-        }
+        if (hit.collider == null)            
+            transform.Translate(moveDelta.x * Time.deltaTime, 0, 0); // Movement
 
         if (x == 0 && y == 0)
         {
