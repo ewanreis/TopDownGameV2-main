@@ -15,23 +15,22 @@ public class playerController : MonoBehaviour
     {   boxCollider = GetComponent<BoxCollider2D>();
         anim = GetComponent<Animator>();
         playerRigid = GetComponent<Rigidbody2D>();
-    }
-    private void Update()
+    }private void Update()
     {   if (Input.GetKey("space") && timer <= 0)
         {   float xPosition = Player.transform.position.x, yPosition = Player.transform.position.y;
             float xVelocity = Helper.ProjectileVelocity(up, down, left, right, 'x'), yVelocity = Helper.ProjectileVelocity(up, down, left, right, 'y');
             Helper.InstantiateProjectile(Bullet, xPosition, yPosition, xVelocity, yVelocity);
             timer = 20;
         }   timer--;
-    }
-    private void FixedUpdate()
+        Helper.DoRayCollisionCheck(Player);
+    }private void FixedUpdate()
     {   down = false; up = false; left = false; right=false;
         float x = Input.GetAxisRaw("Horizontal"),y=0;
         if (x != 0)
             y = 0;
         else if (x == 0)
             y = Input.GetAxisRaw("Vertical");
-
+        
         moveDelta = new Vector3(x, y, 0);                
         // Prevent Going inside colliders y
         hit = Physics2D.BoxCast(transform.position, boxCollider.size, 0, new Vector2(0, moveDelta.y)
@@ -46,7 +45,24 @@ public class playerController : MonoBehaviour
             , LayerMask.GetMask("Actor", "Blocking"));
         if (hit.collider == null)            
             transform.Translate(moveDelta.x * Time.deltaTime, 0, 0); // Movement
-        Helper.DirectionalSwitcher(x, y, anim);
+        string direction = Helper.AnimationSwitcher(x, y, anim);
+        switch (direction)
+        {   case "up":
+                up = true;
+                break;
+            case "down":
+                down = true;
+                break;
+            case "left":
+                left = true;
+                break;
+            case "right":
+                right = true;
+                break;
+            default:
+                down = true;
+                break;
+        }
     }   
 
 }

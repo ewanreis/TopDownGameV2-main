@@ -13,13 +13,10 @@ public class npcMovement : MonoBehaviour
             float step = 0.5f * Time.deltaTime;          
             if (colliding == false)
                 transform.position = Vector3.MoveTowards(transform.position, Player.transform.position, step);     // Movement
-            if (colliding == true)
-                print("true");
-        
-   
-
+            //if (colliding == true)
+                //print("true");
         }
-        print(distance);
+        //print(distance);
     }
     void OnCollisonEnter2D(Collision2D collision)
     {

@@ -36,13 +36,16 @@ public class Helper : MonoBehaviour
             if (down == true)     
                 velocity = -3f;    
         } return velocity;
-    } public static void AnimationSwitcher(float x, float y, Animator anim)
-    {   if (x == 0 && y == 0) // Idle
+    } public static string AnimationSwitcher(float x, float y, Animator anim)
+    {
+        string direction = "";
+        if (x == 0 && y == 0) // Idle
         {
             anim.SetBool("WalkUp", false);
             anim.SetBool("WalkLeft", false);
             anim.SetBool("WalkRight", false);
             anim.SetBool("WalkDown", false);
+            direction = "down";
         }
         if (x < -0.01) // Walk Left
         {
@@ -50,7 +53,7 @@ public class Helper : MonoBehaviour
             anim.SetBool("WalkRight", false);
             anim.SetBool("WalkUp", false);
             anim.SetBool("WalkDown", false);
-
+            direction = "left";
         }
         else if (x > 0) // Walk Right
         {
@@ -58,7 +61,7 @@ public class Helper : MonoBehaviour
             anim.SetBool("WalkRight", true);
             anim.SetBool("WalkUp", false);
             anim.SetBool("WalkDown", false);
-
+            direction = "right";
         }
         if (y < -0.01) // Walk Down
         {
@@ -66,7 +69,7 @@ public class Helper : MonoBehaviour
             anim.SetBool("WalkUp", false);
             anim.SetBool("WalkLeft", false);
             anim.SetBool("WalkRight", false);
-
+            direction = "down";
         }
         else if (y > 0) // Walk Up
         {
@@ -74,7 +77,29 @@ public class Helper : MonoBehaviour
             anim.SetBool("WalkDown", false);
             anim.SetBool("WalkLeft", false);
             anim.SetBool("WalkRight", false);
-
-        }
+            direction = "up";
+        } return direction;
     }
+    public static void DoRayCollisionCheck(GameObject Player)
+    {   float rayLength = 1.0f;
+        //cast a ray downward of length 1
+        RaycastHit2D hit = Physics2D.Raycast(Player.transform.position, -Vector2.up, rayLength);
+        Color hitColor = Color.white;
+        if (hit.collider != null)
+        {   if (hit.collider.tag == "Enemy")
+            {   print("Player has collided with Enemy");
+                hitColor = Color.red;
+            }
+            if (hit.collider.tag == "Ground")
+            {
+                print("Player has collided with Ground");
+                hitColor = Color.green;
+            }
+        }
+        // draw a debug ray to show ray position
+        // You need to enable gizmos in the editor to see these
+        Debug.DrawRay(Player.transform.position, -Vector2.up * rayLength, hitColor);
+
+    }
+
 }
